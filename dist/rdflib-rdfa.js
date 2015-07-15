@@ -348,8 +348,10 @@ $rdf.Util.parseXML = function(str) {
     } else if (typeof module != 'undefined' && module && module.exports){ // Node.js
         //var libxmljs = require('libxmljs'); // Was jsdom before 2012-01 then libxmljs but that nonstandard
         //return libxmljs.parseXmlString(str);
-        var jsdom = require('jsdom');
-        var dom = jsdom.jsdom(str, undefined, {} );// html, level, options
+        //var jsdom = require('jsdom');
+        //var dom = jsdom.jsdom(str, undefined, {} );// html, level, options
+        var DOMParser = require('xmldom').DOMParser;
+        var dom = new DOMParser().parseFromString(str,'text/xml')
         return dom
     } else {
         dparser = new DOMParser();
@@ -452,16 +454,16 @@ $rdf.Util.extend = function () {
 
 /*
  * Implements URI-specific functions
-#
+ *
  * See RFC 2386
-#
+ *
  * See also:
  *   http://www.w3.org/2005/10/ajaw/uri.js
  *   http://www.w3.org/2000/10/swap/uripath.py
-#
+ *
  */
-var $rdf, k, v, _base, _ref,
-  __hasProp = {}.hasOwnProperty;
+var $rdf, base1, k, ref, v,
+  hasProp = {}.hasOwnProperty;
 
 if (typeof $rdf === "undefined" || $rdf === null) {
   $rdf = {};
@@ -554,14 +556,14 @@ $rdf.uri = (function() {
   };
 
   uri.refTo = function(base, uri) {
-    var c, i, j, k, l, n, s, _i, _j, _k, _len, _len1, _ref;
+    var c, i, j, k, l, len, len1, n, o, p, q, ref, ref1, s;
     if (!base) {
       return uri;
     }
     if (base === uri) {
       return '';
     }
-    for (i = _i = 0, _len = uri.length; _i < _len; i = ++_i) {
+    for (i = o = 0, len = uri.length; o < len; i = ++o) {
       c = uri[i];
       if (c !== base[i]) {
         break;
@@ -593,9 +595,9 @@ $rdf.uri = (function() {
       return uri;
     }
     n = 0;
-    _ref = base.slice(i);
-    for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-      c = _ref[_j];
+    ref = base.slice(i);
+    for (p = 0, len1 = ref.length; p < len1; p++) {
+      c = ref[p];
       if (c === '/') {
         n++;
       }
@@ -608,7 +610,7 @@ $rdf.uri = (function() {
     }
     s = '';
     if (n > 0) {
-      for (j = _k = 1; 1 <= n ? _k <= n : _k >= n; j = 1 <= n ? ++_k : --_k) {
+      for (j = q = 1, ref1 = n; 1 <= ref1 ? q <= ref1 : q >= ref1; j = 1 <= ref1 ? ++q : --q) {
         s += '../';
       }
     }
@@ -646,28 +648,28 @@ $rdf.uri = (function() {
 $rdf.Util.uri = $rdf.uri;
 
 if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
-  if ((_base = module.exports).Util == null) {
-    _base.Util = {};
+  if ((base1 = module.exports).Util == null) {
+    base1.Util = {};
   }
-  _ref = $rdf.Util;
-  for (k in _ref) {
-    if (!__hasProp.call(_ref, k)) continue;
-    v = _ref[k];
+  ref = $rdf.Util;
+  for (k in ref) {
+    if (!hasProp.call(ref, k)) continue;
+    v = ref[k];
     module.exports.Util[k] = v;
   }
   module.exports.uri = $rdf.uri;
 }
 /*
  * These are the classes corresponding to the RDF and N3 data models
-#
+ *
  * Designed to look like rdflib and cwm
-#
+ *
  * This is coffee see http://coffeescript.org
  */
 var $rdf, k, v,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  __hasProp = {}.hasOwnProperty,
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 if (typeof $rdf === "undefined" || $rdf === null) {
   $rdf = {};
@@ -691,8 +693,8 @@ $rdf.Node = (function() {
 
 })();
 
-$rdf.Empty = (function(_super) {
-  __extends(Empty, _super);
+$rdf.Empty = (function(superClass) {
+  extend(Empty, superClass);
 
   function Empty() {
     return Empty.__super__.constructor.apply(this, arguments);
@@ -719,11 +721,11 @@ $rdf.Empty = (function(_super) {
     @param uri the uri as string
  */
 
-$rdf.Symbol = (function(_super) {
-  __extends(Symbol, _super);
+$rdf.Symbol = (function(superClass) {
+  extend(Symbol, superClass);
 
-  function Symbol(_at_uri) {
-    this.uri = _at_uri;
+  function Symbol(uri1) {
+    this.uri = uri1;
     this.value = this.uri;
   }
 
@@ -782,8 +784,8 @@ if ($rdf.NextId != null) {
 
 $rdf.NTAnonymousNodePrefix = "_:n";
 
-$rdf.BlankNode = (function(_super) {
-  __extends(BlankNode, _super);
+$rdf.BlankNode = (function(superClass) {
+  extend(BlankNode, superClass);
 
   function BlankNode(id) {
     this.id = $rdf.NextId++;
@@ -825,13 +827,13 @@ $rdf.BlankNode = (function(_super) {
 
 })($rdf.Node);
 
-$rdf.Literal = (function(_super) {
-  __extends(Literal, _super);
+$rdf.Literal = (function(superClass) {
+  extend(Literal, superClass);
 
-  function Literal(_at_value, _at_lang, _at_datatype) {
-    this.value = _at_value;
-    this.lang = _at_lang;
-    this.datatype = _at_datatype;
+  function Literal(value1, lang1, datatype) {
+    this.value = value1;
+    this.lang = lang1;
+    this.datatype = datatype;
     if (this.lang == null) {
       this.lang = void 0;
     }
@@ -895,17 +897,17 @@ $rdf.Literal = (function(_super) {
 
 })($rdf.Node);
 
-$rdf.Collection = (function(_super) {
-  __extends(Collection, _super);
+$rdf.Collection = (function(superClass) {
+  extend(Collection, superClass);
 
   function Collection(initial) {
-    var s, _i, _len;
+    var i, len, s;
     this.id = $rdf.NextId++;
     this.elements = [];
     this.closed = false;
     if (typeof initial !== 'undefined') {
-      for (_i = 0, _len = initial.length; _i < _len; _i++) {
-        s = initial[_i];
+      for (i = 0, len = initial.length; i < len; i++) {
+        s = initial[i];
         this.elements.push($rdf.term(s));
       }
     }
@@ -924,14 +926,14 @@ $rdf.Collection = (function(_super) {
   Collection.prototype.substitute = function(bindings) {
     var s;
     return new $rdf.Collection((function() {
-      var _i, _len, _ref, _results;
-      _ref = this.elements;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        s = _ref[_i];
-        _results.push(s.substitute(bindings));
+      var i, len, ref, results1;
+      ref = this.elements;
+      results1 = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        s = ref[i];
+        results1.push(s.substitute(bindings));
       }
-      return _results;
+      return results1;
     }).call(this));
   };
 
@@ -967,7 +969,7 @@ $rdf.Collection.prototype.compareTerm = $rdf.BlankNode.prototype.compareTerm;
  */
 
 $rdf.term = function(val) {
-  var d2, dt, elt, value, x, _i, _len;
+  var d2, dt, elt, i, len, value, x;
   switch (typeof val) {
     case 'object':
       if (val instanceof Date) {
@@ -978,8 +980,8 @@ $rdf.term = function(val) {
         return new $rdf.Literal(value, void 0, $rdf.Symbol.prototype.XSDdateTime);
       } else if (val instanceof Array) {
         x = new $rdf.Collection;
-        for (_i = 0, _len = val.length; _i < _len; _i++) {
-          elt = val[_i];
+        for (i = 0, len = val.length; i < len; i++) {
+          elt = val[i];
           x.append($rdf.term(elt));
         }
         return x;
@@ -1032,8 +1034,8 @@ $rdf.st = function(subject, predicate, object, why) {
   return new $rdf.Statement(subject, predicate, object, why);
 };
 
-$rdf.Formula = (function(_super) {
-  __extends(Formula, _super);
+$rdf.Formula = (function(superClass) {
+  extend(Formula, superClass);
 
   function Formula() {
     this.statements = [];
@@ -1059,11 +1061,11 @@ $rdf.Formula = (function(_super) {
   };
 
   Formula.prototype.substitute = function(bindings) {
-    var g, s, _i, _len, _ref;
+    var g, i, len, ref, s;
     g = new $rdf.Formula;
-    _ref = this.statements;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      s = _ref[_i];
+    ref = this.statements;
+    for (i = 0, len = ref.length; i < len; i++) {
+      s = ref[i];
       g.addStatement(s.substitute(bindings));
     }
     return g;
@@ -1097,11 +1099,11 @@ $rdf.Formula = (function(_super) {
   };
 
   Formula.prototype.list = function(values) {
-    var elt, r, _i, _len;
+    var elt, i, len, r;
     r = new $rdf.Collection;
     if (values) {
-      for (_i = 0, _len = values.length; _i < _len; _i++) {
-        elt = values[_i];
+      for (i = 0, len = values.length; i < len; i++) {
+        elt = values[i];
         r.append(elt);
       }
     }
@@ -1168,27 +1170,27 @@ $rdf.Formula = (function(_super) {
   };
 
   Formula.prototype.each = function(s, p, o, w) {
-    var elt, results, sts, _i, _j, _k, _l, _len, _len1, _len2, _len3;
+    var elt, i, l, len, len1, len2, len3, m, q, results, sts;
     results = [];
     sts = this.statementsMatching(s, p, o, w, false);
     if (s == null) {
-      for (_i = 0, _len = sts.length; _i < _len; _i++) {
-        elt = sts[_i];
+      for (i = 0, len = sts.length; i < len; i++) {
+        elt = sts[i];
         results.push(elt.subject);
       }
     } else if (p == null) {
-      for (_j = 0, _len1 = sts.length; _j < _len1; _j++) {
-        elt = sts[_j];
+      for (l = 0, len1 = sts.length; l < len1; l++) {
+        elt = sts[l];
         results.push(elt.predicate);
       }
     } else if (o == null) {
-      for (_k = 0, _len2 = sts.length; _k < _len2; _k++) {
-        elt = sts[_k];
+      for (m = 0, len2 = sts.length; m < len2; m++) {
+        elt = sts[m];
         results.push(elt.object);
       }
     } else if (w == null) {
-      for (_l = 0, _len3 = sts.length; _l < _len3; _l++) {
-        elt = sts[_l];
+      for (q = 0, len3 = sts.length; q < len3; q++) {
+        elt = sts[q];
         results.push(elt.why);
       }
     }
@@ -1234,11 +1236,11 @@ $rdf.Formula = (function(_super) {
   };
 
   Formula.prototype.transitiveClosure = function(seeds, predicate, inverse) {
-    var agenda, done, elt, k, s, sups, t, v, _i, _len;
+    var agenda, done, elt, i, k, len, s, sups, t, v;
     done = {};
     agenda = {};
     for (k in seeds) {
-      if (!__hasProp.call(seeds, k)) continue;
+      if (!hasProp.call(seeds, k)) continue;
       v = seeds[k];
       agenda[k] = v;
     }
@@ -1246,7 +1248,7 @@ $rdf.Formula = (function(_super) {
       t = (function() {
         var p;
         for (p in agenda) {
-          if (!__hasProp.call(agenda, p)) continue;
+          if (!hasProp.call(agenda, p)) continue;
           return p;
         }
       })();
@@ -1254,8 +1256,8 @@ $rdf.Formula = (function(_super) {
         return done;
       }
       sups = inverse ? this.each(void 0, predicate, this.fromNT(t)) : this.each(this.fromNT(t), predicate);
-      for (_i = 0, _len = sups.length; _i < _len; _i++) {
-        elt = sups[_i];
+      for (i = 0, len = sups.length; i < len; i++) {
+        elt = sups[i];
         s = elt.toNT();
         if (s in done) {
           continue;
@@ -1281,33 +1283,33 @@ $rdf.Formula = (function(_super) {
    */
 
   Formula.prototype.findMembersNT = function(thisClass) {
-    var members, pred, seeds, st, t, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+    var i, l, len, len1, len2, len3, len4, m, members, pred, q, ref, ref1, ref2, ref3, ref4, ref5, seeds, st, t, u;
     seeds = {};
     seeds[thisClass.toNT()] = true;
     members = {};
-    _ref = this.transitiveClosure(seeds, this.sym('http://www.w3.org/2000/01/rdf-schema#subClassOf'), true);
-    for (t in _ref) {
-      if (!__hasProp.call(_ref, t)) continue;
-      _ref1 = this.statementsMatching(void 0, this.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), this.fromNT(t));
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        st = _ref1[_i];
+    ref = this.transitiveClosure(seeds, this.sym('http://www.w3.org/2000/01/rdf-schema#subClassOf'), true);
+    for (t in ref) {
+      if (!hasProp.call(ref, t)) continue;
+      ref1 = this.statementsMatching(void 0, this.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), this.fromNT(t));
+      for (i = 0, len = ref1.length; i < len; i++) {
+        st = ref1[i];
         members[st.subject.toNT()] = st;
       }
-      _ref2 = this.each(void 0, this.sym('http://www.w3.org/2000/01/rdf-schema#domain'), this.fromNT(t));
-      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-        pred = _ref2[_j];
-        _ref3 = this.statementsMatching(void 0, pred);
-        for (_k = 0, _len2 = _ref3.length; _k < _len2; _k++) {
-          st = _ref3[_k];
+      ref2 = this.each(void 0, this.sym('http://www.w3.org/2000/01/rdf-schema#domain'), this.fromNT(t));
+      for (l = 0, len1 = ref2.length; l < len1; l++) {
+        pred = ref2[l];
+        ref3 = this.statementsMatching(void 0, pred);
+        for (m = 0, len2 = ref3.length; m < len2; m++) {
+          st = ref3[m];
           members[st.subject.toNT()] = st;
         }
       }
-      _ref4 = this.each(void 0, this.sym('http://www.w3.org/2000/01/rdf-schema#range'), this.fromNT(t));
-      for (_l = 0, _len3 = _ref4.length; _l < _len3; _l++) {
-        pred = _ref4[_l];
-        _ref5 = this.statementsMatching(void 0, pred);
-        for (_m = 0, _len4 = _ref5.length; _m < _len4; _m++) {
-          st = _ref5[_m];
+      ref4 = this.each(void 0, this.sym('http://www.w3.org/2000/01/rdf-schema#range'), this.fromNT(t));
+      for (q = 0, len3 = ref4.length; q < len3; q++) {
+        pred = ref4[q];
+        ref5 = this.statementsMatching(void 0, pred);
+        for (u = 0, len4 = ref5.length; u < len4; u++) {
+          st = ref5[u];
           members[st.object.toNT()] = st;
         }
       }
@@ -1327,7 +1329,7 @@ $rdf.Formula = (function(_super) {
     var k, uris, v;
     uris = {};
     for (k in t) {
-      if (!__hasProp.call(t, k)) continue;
+      if (!hasProp.call(t, k)) continue;
       v = t[k];
       if (k[0] === '<') {
         uris[k.slice(1, -1)] = v;
@@ -1354,28 +1356,28 @@ $rdf.Formula = (function(_super) {
    */
 
   Formula.prototype.findTypesNT = function(subject) {
-    var domain, range, rdftype, st, types, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3;
+    var domain, i, l, len, len1, len2, len3, m, q, range, rdftype, ref, ref1, ref2, ref3, st, types;
     rdftype = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
     types = [];
-    _ref = this.statementsMatching(subject, void 0, void 0);
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      st = _ref[_i];
+    ref = this.statementsMatching(subject, void 0, void 0);
+    for (i = 0, len = ref.length; i < len; i++) {
+      st = ref[i];
       if (st.predicate.uri === rdftype) {
         types[st.object.toNT()] = st;
       } else {
-        _ref1 = this.each(st.predicate, this.sym('http://www.w3.org/2000/01/rdf-schema#domain'));
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          range = _ref1[_j];
+        ref1 = this.each(st.predicate, this.sym('http://www.w3.org/2000/01/rdf-schema#domain'));
+        for (l = 0, len1 = ref1.length; l < len1; l++) {
+          range = ref1[l];
           types[range.toNT()] = st;
         }
       }
     }
-    _ref2 = this.statementsMatching(void 0, void 0, subject);
-    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-      st = _ref2[_k];
-      _ref3 = this.each(st.predicate, this.sym('http://www.w3.org/2000/01/rdf-schema#range'));
-      for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-        domain = _ref3[_l];
+    ref2 = this.statementsMatching(void 0, void 0, subject);
+    for (m = 0, len2 = ref2.length; m < len2; m++) {
+      st = ref2[m];
+      ref3 = this.each(st.predicate, this.sym('http://www.w3.org/2000/01/rdf-schema#range'));
+      for (q = 0, len3 = ref3.length; q < len3; q++) {
+        domain = ref3[q];
         types[domain.toNT()] = st;
       }
     }
@@ -1419,15 +1421,15 @@ $rdf.Formula = (function(_super) {
    */
 
   Formula.prototype.topTypeURIs = function(types) {
-    var j, k, n, tops, v, _i, _len, _ref;
+    var i, j, k, len, n, ref, tops, v;
     tops = [];
     for (k in types) {
-      if (!__hasProp.call(types, k)) continue;
+      if (!hasProp.call(types, k)) continue;
       v = types[k];
       n = 0;
-      _ref = this.each(this.sym(k), this.sym('http://www.w3.org/2000/01/rdf-schema#subClassOf'));
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        j = _ref[_i];
+      ref = this.each(this.sym(k), this.sym('http://www.w3.org/2000/01/rdf-schema#subClassOf'));
+      for (i = 0, len = ref.length; i < len; i++) {
+        j = ref[i];
         if (j.uri !== 'http://www.w3.org/2000/01/rdf-schema#Resource') {
           n++;
           break;
@@ -1455,16 +1457,16 @@ $rdf.Formula = (function(_super) {
    */
 
   Formula.prototype.bottomTypeURIs = function(types) {
-    var bots, bottom, elt, k, subs, v, _i, _len, _ref;
+    var bots, bottom, elt, i, k, len, ref, subs, v;
     bots = [];
     for (k in types) {
-      if (!__hasProp.call(types, k)) continue;
+      if (!hasProp.call(types, k)) continue;
       v = types[k];
       subs = this.each(void 0, this.sym('http://www.w3.org/2000/01/rdf-schema#subClassOf'), this.sym(k));
       bottom = true;
-      for (_i = 0, _len = subs.length; _i < _len; _i++) {
-        elt = subs[_i];
-        if (_ref = elt.uri, __indexOf.call(types, _ref) >= 0) {
+      for (i = 0, len = subs.length; i < len; i++) {
+        elt = subs[i];
+        if (ref = elt.uri, indexOf.call(types, ref) >= 0) {
           bottom = false;
           break;
         }
@@ -1517,7 +1519,7 @@ $rdf.variable = $rdf.Formula.prototype.variable;
 
 /*
  * Variable
-#
+ *
  * Variables are placeholders used in patterns to be matched.
  * In cwm they are symbols which are the formula's list of quantified variables.
  * In sparl they are not visibily URIs.  Here we compromise, by having
@@ -1525,8 +1527,8 @@ $rdf.variable = $rdf.Formula.prototype.variable;
  * but the ? nottaion has an implicit base uri of 'varid:'
  */
 
-$rdf.Variable = (function(_super) {
-  __extends(Variable, _super);
+$rdf.Variable = (function(superClass) {
+  extend(Variable, superClass);
 
   function Variable(rel) {
     this.base = 'varid:';
@@ -1547,8 +1549,8 @@ $rdf.Variable = (function(_super) {
   Variable.prototype.hashString = Variable.prototype.toNT;
 
   Variable.prototype.substitute = function(bindings) {
-    var _ref;
-    return (_ref = bindings[this.toNT()]) != null ? _ref : this;
+    var ref;
+    return (ref = bindings[this.toNT()]) != null ? ref : this;
   };
 
   Variable.prototype.sameTerm = function(other) {
@@ -1582,7 +1584,7 @@ $rdf.graph = function() {
 
 if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
   for (k in $rdf) {
-    if (!__hasProp.call($rdf, k)) continue;
+    if (!hasProp.call($rdf, k)) continue;
     v = $rdf[k];
     module.exports[k] = v;
   }
@@ -7315,25 +7317,25 @@ return Serializer;
  * Updates-Via
  */
 var $rdf, k, v,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty;
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  hasProp = {}.hasOwnProperty;
 
 if (typeof $rdf === "undefined" || $rdf === null) {
   $rdf = {};
 }
 
 $rdf.UpdatesSocket = (function() {
-  function UpdatesSocket(_at_parent, _at_via) {
+  function UpdatesSocket(parent, via1) {
     var error;
-    this.parent = _at_parent;
-    this.via = _at_via;
-    this.subscribe = __bind(this.subscribe, this);
-    this.onError = __bind(this.onError, this);
-    this.onMessage = __bind(this.onMessage, this);
-    this.onClose = __bind(this.onClose, this);
-    this.onOpen = __bind(this.onOpen, this);
-    this._subscribe = __bind(this._subscribe, this);
-    this._send = __bind(this._send, this);
+    this.parent = parent;
+    this.via = via1;
+    this.subscribe = bind(this.subscribe, this);
+    this.onError = bind(this.onError, this);
+    this.onMessage = bind(this.onMessage, this);
+    this.onClose = bind(this.onClose, this);
+    this.onOpen = bind(this.onOpen, this);
+    this._subscribe = bind(this._subscribe, this);
+    this._send = bind(this._send, this);
     this.connected = false;
     this.pending = {};
     this.subscribed = {};
@@ -7351,21 +7353,21 @@ $rdf.UpdatesSocket = (function() {
   }
 
   UpdatesSocket.prototype._decode = function(q) {
-    var elt, i, k, r, v, _ref, _ref1;
+    var elt, i, k, r, ref, ref1, v;
     r = {};
-    _ref = (function() {
-      var _i, _len, _ref, _results;
-      _ref = q.split('&');
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        elt = _ref[_i];
-        _results.push(elt.split('='));
+    ref = (function() {
+      var j, len, ref, results;
+      ref = q.split('&');
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        elt = ref[j];
+        results.push(elt.split('='));
       }
-      return _results;
+      return results;
     })();
-    for (i in _ref) {
-      elt = _ref[i];
-      _ref1 = [decodeURIComponent(elt[0]), decodeURIComponent(elt[1])], k = _ref1[0], v = _ref1[1];
+    for (i in ref) {
+      elt = ref[i];
+      ref1 = [decodeURIComponent(elt[0]), decodeURIComponent(elt[1])], k = ref1[0], v = ref1[1];
       if (r[k] == null) {
         r[k] = [];
       }
@@ -7375,9 +7377,9 @@ $rdf.UpdatesSocket = (function() {
   };
 
   UpdatesSocket.prototype._send = function(method, uri, data) {
-    var message, _base;
+    var base, message;
     message = [method, uri, data].join(' ');
-    return typeof (_base = this.socket).send === "function" ? _base.send(message) : void 0;
+    return typeof (base = this.socket).send === "function" ? base.send(message) : void 0;
   };
 
   UpdatesSocket.prototype._subscribe = function(uri) {
@@ -7386,14 +7388,14 @@ $rdf.UpdatesSocket = (function() {
   };
 
   UpdatesSocket.prototype.onOpen = function(e) {
-    var uri, _results;
+    var results, uri;
     this.connected = true;
-    _results = [];
+    results = [];
     for (uri in this.pending) {
       delete this.pending[uri];
-      _results.push(this._subscribe(uri));
+      results.push(this._subscribe(uri));
     }
-    return _results;
+    return results;
   };
 
   UpdatesSocket.prototype.onClose = function(e) {
@@ -7406,10 +7408,10 @@ $rdf.UpdatesSocket = (function() {
   };
 
   UpdatesSocket.prototype.onMessage = function(e) {
-    var message, _base;
+    var base, message;
     message = e.data.split(' ');
     if (message[0] === 'ping') {
-      return typeof (_base = this.socket).send === "function" ? _base.send('pong ' + message.slice(1).join(' ')) : void 0;
+      return typeof (base = this.socket).send === "function" ? base.send('pong ' + message.slice(1).join(' ')) : void 0;
     } else if (message[0] === 'pub') {
       return this.parent.onUpdate(message[1], this._decode(message[2]));
     }
@@ -7432,11 +7434,11 @@ $rdf.UpdatesSocket = (function() {
 })();
 
 $rdf.UpdatesVia = (function() {
-  function UpdatesVia(_at_fetcher) {
-    this.fetcher = _at_fetcher;
-    this.onUpdate = __bind(this.onUpdate, this);
-    this.onHeaders = __bind(this.onHeaders, this);
-    this.register = __bind(this.register, this);
+  function UpdatesVia(fetcher) {
+    this.fetcher = fetcher;
+    this.onUpdate = bind(this.onUpdate, this);
+    this.onHeaders = bind(this.onHeaders, this);
+    this.register = bind(this.register, this);
     this.graph = {};
     this.via = {};
     this.fetcher.addCallback('headers', this.onHeaders);
@@ -7480,7 +7482,7 @@ $rdf.UpdatesVia = (function() {
 
 if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
   for (k in $rdf) {
-    if (!__hasProp.call($rdf, k)) continue;
+    if (!hasProp.call($rdf, k)) continue;
     v = $rdf[k];
     module.exports[k] = v;
   }
@@ -7531,9 +7533,6 @@ if ((typeof module !== "undefined" && module !== null ? module.exports : void 0)
     };
 
     var _each = function (arr, iterator) {
-        if (arr.forEach) {
-            return arr.forEach(iterator);
-        }
         for (var i = 0; i < arr.length; i += 1) {
             iterator(arr[i], i, arr);
         }
@@ -8310,23 +8309,26 @@ if ((typeof module !== "undefined" && module !== null ? module.exports : void 0)
             pause: function () {
                 if (q.paused === true) { return; }
                 q.paused = true;
-                q.process();
             },
             resume: function () {
                 if (q.paused === false) { return; }
                 q.paused = false;
-                q.process();
+                // Need to call q.process once per concurrent
+                // worker to preserve full concurrency after pause
+                for (var w = 1; w <= q.concurrency; w++) {
+                    async.setImmediate(q.process);
+                }
             }
         };
         return q;
     };
-    
+
     async.priorityQueue = function (worker, concurrency) {
-        
+
         function _compareTasks(a, b){
           return a.priority - b.priority;
         };
-        
+
         function _binarySearch(sequence, item, compare) {
           var beg = -1,
               end = sequence.length - 1;
@@ -8340,7 +8342,7 @@ if ((typeof module !== "undefined" && module !== null ? module.exports : void 0)
           }
           return beg;
         }
-        
+
         function _insert(q, data, priority, callback) {
           if (!q.started){
             q.started = true;
@@ -8362,7 +8364,7 @@ if ((typeof module !== "undefined" && module !== null ? module.exports : void 0)
                   priority: priority,
                   callback: typeof callback === 'function' ? callback : null
               };
-              
+
               q.tasks.splice(_binarySearch(q.tasks, item, _compareTasks) + 1, 0, item);
 
               if (q.saturated && q.tasks.length === q.concurrency) {
@@ -8371,15 +8373,15 @@ if ((typeof module !== "undefined" && module !== null ? module.exports : void 0)
               async.setImmediate(q.process);
           });
         }
-        
+
         // Start with a normal queue
         var q = async.queue(worker, concurrency);
-        
+
         // Override push to accept second parameter representing priority
         q.push = function (data, priority, callback) {
           _insert(q, data, priority, callback);
         };
-        
+
         // Remove unshift function
         delete q.unshift;
 
@@ -8633,7 +8635,6 @@ exports.SlowBuffer = SlowBuffer
 exports.INSPECT_MAX_BYTES = 50
 Buffer.poolSize = 8192 // not used by this implementation
 
-var kMaxLength = 0x3fffffff
 var rootParent = {}
 
 /**
@@ -8659,17 +8660,26 @@ var rootParent = {}
  * get the Object implementation, which is slower but will work correctly.
  */
 Buffer.TYPED_ARRAY_SUPPORT = (function () {
+  function Foo () {}
   try {
     var buf = new ArrayBuffer(0)
     var arr = new Uint8Array(buf)
     arr.foo = function () { return 42 }
+    arr.constructor = Foo
     return arr.foo() === 42 && // typed array instances can be augmented
+        arr.constructor === Foo && // constructor can be set
         typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
         new Uint8Array(1).subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
   } catch (e) {
     return false
   }
 })()
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
 
 /**
  * Class: Buffer
@@ -8821,9 +8831,9 @@ function allocate (that, length) {
 function checked (length) {
   // Note: cannot use `length < kMaxLength` here because that fails when
   // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength) {
+  if (length >= kMaxLength()) {
     throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength.toString(16) + ' bytes')
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
   }
   return length | 0
 }
@@ -8915,29 +8925,38 @@ Buffer.concat = function concat (list, length) {
 }
 
 function byteLength (string, encoding) {
-  if (typeof string !== 'string') string = String(string)
+  if (typeof string !== 'string') string = '' + string
 
-  if (string.length === 0) return 0
+  var len = string.length
+  if (len === 0) return 0
 
-  switch (encoding || 'utf8') {
-    case 'ascii':
-    case 'binary':
-    case 'raw':
-      return string.length
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return string.length * 2
-    case 'hex':
-      return string.length >>> 1
-    case 'utf8':
-    case 'utf-8':
-      return utf8ToBytes(string).length
-    case 'base64':
-      return base64ToBytes(string).length
-    default:
-      return string.length
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'binary':
+      // Deprecated
+      case 'raw':
+      case 'raws':
+        return len
+      case 'utf8':
+      case 'utf-8':
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
   }
 }
 Buffer.byteLength = byteLength
@@ -8946,8 +8965,7 @@ Buffer.byteLength = byteLength
 Buffer.prototype.length = undefined
 Buffer.prototype.parent = undefined
 
-// toString(encoding, start=0, end=buffer.length)
-Buffer.prototype.toString = function toString (encoding, start, end) {
+function slowToString (encoding, start, end) {
   var loweredCase = false
 
   start = start | 0
@@ -8988,6 +9006,13 @@ Buffer.prototype.toString = function toString (encoding, start, end) {
         loweredCase = true
     }
   }
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
 }
 
 Buffer.prototype.equals = function equals (b) {
@@ -22664,6 +22689,8 @@ function N3Parser(options) {
       return this._callback = noop, this._subject = null;
     };
   }
+  this._blankNodePrefix = typeof options.blankNodePrefix !== 'string' ? '' :
+                            '_:' + options.blankNodePrefix.replace(/^_:/, '');
   this._lexer = options.lexer || new N3Lexer({ lineMode: isLineMode });
 }
 
@@ -22755,7 +22782,8 @@ N3Parser.prototype = {
 
   // ### `_readPredicate` reads a triple's predicate.
   _readPredicate: function (token) {
-    switch (token.type) {
+    var type = token.type;
+    switch (type) {
     case 'IRI':
     case 'abbreviation':
       if (this._baseIRI === null || absoluteIRI.test(token.value))
@@ -22779,9 +22807,9 @@ N3Parser.prototype = {
     case '}':
       // Expected predicate didn't come, must have been trailing semicolon.
       if (this._predicate === null)
-        return this._error('Unexpected ' + token.type, token);
+        return this._error('Unexpected ' + type, token);
       this._subject = null;
-      return this._readBlankNodeTail(token);
+      return type === ']' ? this._readBlankNodeTail(token) : this._readPunctuation(token);
     case ';':
       // Extra semicolons can be safely ignored
       return this._readPredicate;
@@ -22854,14 +22882,14 @@ N3Parser.prototype = {
   // ### `_readBlankNodeTail` reads the end of a blank node.
   _readBlankNodeTail: function (token) {
     if (token.type !== ']')
-      return this._readPunctuation(token);
+      return this._readBlankNodePunctuation(token);
 
     // Store blank node triple.
     if (this._subject !== null)
       this._callback(null, { subject:   this._subject,
                              predicate: this._predicate,
                              object:    this._object,
-                             graph:     this._graph || '' });
+                             graph:     this._graph || '' });
 
     // Restore parent triple that contains the blank node.
     var triple = this._tripleStack.pop();
@@ -23059,7 +23087,30 @@ N3Parser.prototype = {
       this._callback(null, { subject:   subject,
                              predicate: this._predicate,
                              object:    this._object,
-                             graph:     graph || '' });
+                             graph:     graph || '' });
+    return next;
+  },
+
+    // ### `_readBlankNodePunctuation` reads punctuation in a blank node
+  _readBlankNodePunctuation: function (token) {
+    var next;
+    switch (token.type) {
+    // Semicolon means the subject is shared; predicate and object are different.
+    case ';':
+      next = this._readPredicate;
+      break;
+    // Comma means both the subject and predicate are shared; the object is different.
+    case ',':
+      next = this._readObject;
+      break;
+    default:
+      return this._error('Expected punctuation to follow "' + this._object + '"', token);
+    }
+    // A triple has been completed now, so return it.
+    this._callback(null, { subject:   this._subject,
+                           predicate: this._predicate,
+                           object:    this._object,
+                           graph:     this._graph || '' });
     return next;
   },
 
@@ -23188,7 +23239,7 @@ N3Parser.prototype = {
     // We start reading in the top context.
     this._readCallback = this._readInTopContext;
     this._prefixes = Object.create(null);
-    this._prefixes._ = '_:b' + blankNodePrefix++ + '_';
+    this._prefixes._ = this._blankNodePrefix || '_:b' + blankNodePrefix++ + '_';
 
     // If the input argument is not given, shift parameters
     if (typeof input === 'function')
@@ -23349,7 +23400,6 @@ N3Store.prototype = {
     if (key0) (tmp = index0, index0 = {})[key0] = tmp[key0];
     for (var value0 in index0) {
       if (index1 = index0[value0]) {
-
         // If a key is specified, count only that part of index 1.
         if (key1) (tmp = index1, index1 = {})[key1] = tmp[key1];
         for (var value1 in index1) {
@@ -23416,7 +23466,7 @@ N3Store.prototype = {
     this._prefixes[prefix] = iri;
   },
 
-  // ### `addPrefixex` adds support for querying with the given prefixes
+  // ### `addPrefixes` adds support for querying with the given prefixes
   addPrefixes: function (prefixes) {
     for (var prefix in prefixes)
       this.addPrefix(prefix, prefixes[prefix]);
@@ -23435,7 +23485,7 @@ N3Store.prototype = {
     if (!(subject     = entities[subject]))   return;
     if (!(predicate   = entities[predicate])) return;
     if (!(object      = entities[object]))    return;
-    if (!(graphItem = graphs[graph]))   return;
+    if (!(graphItem   = graphs[graph]))       return;
 
     // Verify that the triple exists.
     var subjects, predicates;
@@ -23656,7 +23706,11 @@ module.exports = N3StreamWriter;
 },{"./N3Writer.js":39,"stream":24,"util":27}],38:[function(require,module,exports){
 // **N3Util** provides N3 utility functions
 
-var XsdString = 'http://www.w3.org/2001/XMLSchema#string';
+var Xsd = 'http://www.w3.org/2001/XMLSchema#';
+var XsdString  = Xsd + 'string';
+var XsdInteger = Xsd + 'integer';
+var XsdDecimal = Xsd + 'decimal';
+var XsdBoolean = Xsd + 'boolean';
 var RdfLangString = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString';
 
 var N3Util = {
@@ -23709,17 +23763,42 @@ var N3Util = {
 
   // Expands the prefixed name to a full IRI (also when it occurs as a literal's type)
   expandPrefixedName: function (prefixedName, prefixes) {
-    var match = /(?:^|"\^\^)([^:\/#"'\^_]*):[^\/]/.exec(prefixedName);
-    if (!match) return prefixedName;
-
-    var prefix = match[1], base = prefixes[prefix], index = match.index;
+    var match = /(?:^|"\^\^)([^:\/#"'\^_]*):[^\/]*$/.exec(prefixedName), prefix, base, index;
+    if (match)
+      prefix = match[1], base = prefixes[prefix], index = match.index;
     if (base === undefined)
-      throw new Error('Unknown prefix: ' + prefix);
+      return prefixedName;
 
     // The match index is non-zero when expanding a literal's type.
     return index === 0 ? base + prefixedName.substr(prefix.length + 1)
                        : prefixedName.substr(0, index + 3) +
                          base + prefixedName.substr(index + prefix.length + 4);
+  },
+
+  // Creates an IRI in N3.js representation
+  createIRI: function (iri) {
+    return iri && iri[0] === '"' ? N3Util.getLiteralValue(iri) : iri;
+  },
+
+  // Creates a literal in N3.js representation
+  createLiteral: function (value, modifier) {
+    if (!modifier) {
+      switch (typeof value) {
+      case 'boolean':
+        modifier = XsdBoolean;
+        break;
+      case 'number':
+        if (isFinite(value)) {
+          modifier = value % 1 === 0 ? XsdInteger : XsdDecimal;
+          break;
+        }
+      default:
+        return '"' + value + '"';
+      }
+    }
+    return '"' + value +
+           (/^[a-z]+(-[a-z0-9]+)*$/i.test(modifier) ? '"@'  + modifier.toLowerCase()
+                                                    : '"^^' + modifier);
   },
 };
 
@@ -23766,21 +23845,24 @@ function N3Writer(outputStream, options) {
   // Shift arguments if the first argument is not a stream
   if (outputStream && typeof outputStream.write !== 'function')
     options = outputStream, outputStream = null;
+  options = options || {};
 
   // If no output stream given, send the output as string through the end callback
   if (!outputStream) {
-    outputStream = this;
-    this._output = '';
-    this.write = function (chunk, encoding, callback) {
-      this._output += chunk;
-      callback && callback();
+    var output = '';
+    this._outputStream = {
+      write: function (chunk, encoding, done) { output += chunk; done && done(); },
+      end:   function (done) { done && done(null, output); },
     };
+    this._endStream = true;
   }
-  this._outputStream = outputStream;
+  else {
+    this._outputStream = outputStream;
+    this._endStream = options.end === undefined ? true : !!options.end;
+  }
 
   // Initialize writer, depending on the format
   this._subject = null;
-  options = options || {};
   if (!(/triple|quad/i).test(options.format)) {
     this._graph = '';
     this._prefixIRIs = Object.create(null);
@@ -23853,7 +23935,8 @@ N3Writer.prototype = {
       iri = iri.replace(escapeAll, characterReplacer);
     // Try to represent the IRI as prefixed name
     var prefixMatch = this._prefixRegex.exec(iri);
-    return prefixMatch ? this._prefixIRIs[prefixMatch[1]] + prefixMatch[2] : '<' + iri + '>';
+    return !prefixMatch ? '<' + iri + '>' :
+           (!prefixMatch[1] ? iri : this._prefixIRIs[prefixMatch[1]] + prefixMatch[2]);
   },
 
   // ### `_encodeLiteral` represents a literal
@@ -23930,13 +24013,13 @@ N3Writer.prototype = {
   // ### `addPrefixes` adds the prefixes to the output stream
   addPrefixes: function (prefixes, done) {
     // Add all useful prefixes
-    var hasPrefixes = false;
+    var prefixIRIs = this._prefixIRIs, hasPrefixes = false;
     for (var prefix in prefixes) {
       // Verify whether the prefix can be used and does not exist yet
       var iri = prefixes[prefix];
-      if (/[#\/]$/.test(iri) && this._prefixIRIs[iri] !== (prefix += ':')) {
+      if (/[#\/]$/.test(iri) && prefixIRIs[iri] !== (prefix += ':')) {
         hasPrefixes = true;
-        this._prefixIRIs[iri] = prefix;
+        prefixIRIs[iri] = prefix;
         // Finish a possible pending triple
         if (this._subject !== null) {
           this._write(this._graph ? '\n}\n' : '.\n');
@@ -23948,17 +24031,20 @@ N3Writer.prototype = {
     }
     // Recreate the prefix matcher
     if (hasPrefixes) {
-      var prefixIRIs = '';
-      for (var prefixIRI in this._prefixIRIs)
-        prefixIRIs += prefixIRIs ? '|' + prefixIRI : prefixIRI;
-      prefixIRIs = prefixIRIs.replace(/[\]\/\(\)\*\+\?\.\\\$]/g, '\\$&');
-      this._prefixRegex = new RegExp('^(' + prefixIRIs + ')([a-zA-Z][\\-_a-zA-Z0-9]*)$');
+      var IRIlist = '', prefixList = '';
+      for (var prefixIRI in prefixIRIs) {
+        IRIlist += IRIlist ? '|' + prefixIRI : prefixIRI;
+        prefixList += (prefixList ? '|' : '') + prefixIRIs[prefixIRI];
+      }
+      IRIlist = IRIlist.replace(/[\]\/\(\)\*\+\?\.\\\$]/g, '\\$&');
+      this._prefixRegex = new RegExp('^(?:' + prefixList + ')[^\/]*$|' +
+                                     '^(' + IRIlist + ')([a-zA-Z][\\-_a-zA-Z0-9]*)$');
     }
     // End a prefix block with a newline
     this._write(hasPrefixes ? '\n' : '', done);
   },
 
-  // ### `_prefixRegex` matches an IRI that begins with one of the added prefixes
+  // ### `_prefixRegex` matches a prefixed name or IRI that begins with one of the added prefixes
   _prefixRegex: /$0^/,
 
   // ### `end` signals the end of the output stream
@@ -23971,16 +24057,13 @@ N3Writer.prototype = {
     // Disallow further writing
     this._write = this._blockedWrite;
 
-    // If writing to a string instead of an actual stream, send the string
-    if (this === this._outputStream)
-      return done && done(null, this._output);
-
     // Try to end the underlying stream, ensuring done is called exactly one time
-    var singleDone = done && function () { singleDone = null, done(); };
-    // Ending a stream can error
-    try { this._outputStream.end(singleDone); }
-    // Execute the callback if it hasn't been executed
-    catch (error) { singleDone && singleDone(); }
+    var singleDone = done && function (error, result) { singleDone = null, done(error, result); };
+    if (this._endStream) {
+      try { return this._outputStream.end(singleDone); }
+      catch (error) { /* error closing stream */ }
+    }
+    singleDone && singleDone();
   },
 };
 
@@ -25569,12 +25652,9 @@ $rdf.serialize = function(target, kb, base, contentType, callback) {
     }
 
     function executeCallback(err, result) {
-        console.log("result: " + result);
-        console.log("callback: " + callback);
         if(callback) {
             callback(err, result);
         } else {
-            console.log("returning: " + result);
             return result;
         }
     }

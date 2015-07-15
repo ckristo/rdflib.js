@@ -347,8 +347,10 @@ $rdf.Util.parseXML = function(str) {
     } else if (typeof module != 'undefined' && module && module.exports){ // Node.js
         //var libxmljs = require('libxmljs'); // Was jsdom before 2012-01 then libxmljs but that nonstandard
         //return libxmljs.parseXmlString(str);
-        var jsdom = require('jsdom');
-        var dom = jsdom.jsdom(str, undefined, {} );// html, level, options
+        //var jsdom = require('jsdom');
+        //var dom = jsdom.jsdom(str, undefined, {} );// html, level, options
+        var DOMParser = require('xmldom').DOMParser;
+        var dom = new DOMParser().parseFromString(str,'text/xml')
         return dom
     } else {
         dparser = new DOMParser();
